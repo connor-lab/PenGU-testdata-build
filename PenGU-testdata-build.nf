@@ -4,22 +4,23 @@ params.csv = 'genome_urls.csv'
 params.refreads = 'SRR8062313'
 params.fq_header = '@M04531:123:000000000-T3STP:1'
 params.read_lengths = '125,150,175,200,225,250'
+params.outdir = 'output'
 
 
 fq_header = params.fq_header
-
 read_lengths = params.read_lengths.split(',')
+outdir = params.outdir
 
 
 Channel.fromPath(params.csv).splitCsv(header: true).set{ assemblyUrlsCsv }
-
 Channel.from( read_lengths ).set{ readLengths }
-
 Channel.fromSRA(params.refreads).set{ referenceFastq }
 
 
 process DOWNLOAD_ASSEMBLY {
     tag {cols.Name}
+
+    publishDir "${outdir}/assembly_fasta", mode: 'copy', pattern: "${cols.Name}.fa"
 
     input:
     val cols from assemblyUrlsCsv
@@ -119,6 +120,8 @@ process SIMULATE_READS {
 
 process CLEAN_SIMULATED_FASTQ {
     tag { name }
+
+    publishDir "${outdir}/fastq", mode: 'copy', pattern: "*_R?_001.fastq.gz"
 
     input:
     set name, length, file(forward), file(reverse) from simulatedReads
