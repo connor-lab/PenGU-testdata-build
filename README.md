@@ -17,5 +17,8 @@ By default, submit to SLURM cluster. Change 'slurm' to 'local' in nextflow.confi
 --read_lengths	Comma-delimited list of read lengths to simulate reads at [default: '125,150,175,200,225,250']
 ```
 
+Requires an [NCBI_API_KEY](https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities). 
+Set `export NCBI_API_KEY=0123456789abcdef` somewhere in your environment (like `~/.bash_rc`).
+
 
 This pipeline contains GPLv3 licensed code from [ArtificalFastqGenerator](https://sourceforge.net/projects/artfastqgen/).
