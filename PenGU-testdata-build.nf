@@ -58,11 +58,13 @@ process EXTRACT_REGION {
 
 simulateReadsRegion.mix(
     simulateReadsNoRegion.map { 
-        [ it[0], it[1], it[2], it[4] ] 
+        [ it[0], it[1], it[2], it[3] ] 
         }
-    ).set{
-        getFirstFastaHeader
+    ).into{
+        getFirstFastaHeader ; dumpC
     }
+
+dumpC.println()
 
 process GETFIRSTFASTAHEADER {
     tag { name }
