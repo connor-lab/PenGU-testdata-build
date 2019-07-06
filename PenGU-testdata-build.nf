@@ -60,11 +60,9 @@ simulateReadsRegion.mix(
     simulateReadsNoRegion.map { 
         [ it[0], it[1], it[2], it[3] ] 
         }
-    ).into{
-        getFirstFastaHeader ; dumpC
+    ).set{
+        getFirstFastaHeader
     }
-
-dumpC.println()
 
 process GETFIRSTFASTAHEADER {
     tag { name }
