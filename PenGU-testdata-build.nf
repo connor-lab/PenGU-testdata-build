@@ -3,7 +3,7 @@
 params.csv = 'genome_urls.csv'
 params.refreads = 'SRR8062313'
 params.fq_header = '@M04531:123:000000000-T3STP:1'
-params.read_lengths = '125,150,175,200,225,250'
+params.read_lengths = '150,200,225,250'
 params.outdir = 'output'
 
 
@@ -26,7 +26,7 @@ process DOWNLOAD_ASSEMBLY {
     val cols from assemblyUrlsCsv
 
     output:
-    set val("${cols.Name}"), val("${cols.targetCov}"), file("${cols.Name}.fa"), val("${cols.extract_amplicon}"), val("${cols.amplicon_region}") into choiceExtractRegion
+    set val("${cols.Name}"), val("${cols.targetCov}"), val("${cols.ReadPrefix}"), file("${cols.Name}.fa"), val("${cols.extract_amplicon}"), val("${cols.amplicon_region}") into choiceExtractRegion
     
     script:
     """
@@ -37,16 +37,16 @@ process DOWNLOAD_ASSEMBLY {
 Channel.create().set{ extractRegion }
 Channel.create().set{ simulateReadsNoRegion }
 
-choiceExtractRegion.choice( extractRegion, simulateReadsNoRegion) { it[3].toLowerCase() ==~ /true/ ? 0 : 1}
+choiceExtractRegion.choice( extractRegion, simulateReadsNoRegion) { it[4].toLowerCase() ==~ /true/ ? 0 : 1}
 
 process EXTRACT_REGION {
     tag { name }
 
     input:
-    set name, coverage, file(assembly), extract, region from extractRegion
+    set name, coverage, prefix, file(assembly), extract, region from extractRegion
 
     output:
-    set val(name), val(coverage), file("${assembly}") into simulateReadsRegion
+    set val(name), val(coverage), val(prefix), file("${assembly}") into simulateReadsRegion
 
     script:
 
@@ -58,7 +58,7 @@ process EXTRACT_REGION {
 
 simulateReadsRegion.mix(
     simulateReadsNoRegion.map { 
-        [ it[0], it[1], it[2] ] 
+        [ it[0], it[1], it[2], it[4] ] 
         }
     ).set{
         getFirstFastaHeader
@@ -68,10 +68,10 @@ process GETFIRSTFASTAHEADER {
     tag { name }
 
     input:
-    set name, coverage, file(assembly) from getFirstFastaHeader
+    set name, coverage, prefix, file(assembly) from getFirstFastaHeader
 
     output:
-    set val(name), val(coverage), file("${assembly}"), stdout into simulateReads
+    set val(name), val(coverage), val(prefix), file("${assembly}"), stdout into simulateReads
 
     script:
     """
@@ -106,10 +106,10 @@ process SIMULATE_READS {
     maxForks 10
 
     input:
-    set name, coverage, file(assembly), header, length, file(forward), file(reverse) from simulateReads.combine(readLengths).combine(decompressedReferenceFastq)
+    set name, coverage, prefix, file(assembly), header, length, file(forward), file(reverse) from simulateReads.combine(readLengths).combine(decompressedReferenceFastq)
 
     output:
-    set name, length, file("${name}.1.fastq"), file("${name}.2.fastq") into simulatedReads
+    set name, length, prefix, file("${name}.1.fastq"), file("${name}.2.fastq") into simulatedReads
 
     script:
     """
@@ -124,17 +124,14 @@ process CLEAN_SIMULATED_FASTQ {
     publishDir "${outdir}/fastq", mode: 'copy', pattern: "*_R?_001.fastq.gz"
 
     input:
-    set name, length, file(forward), file(reverse) from simulatedReads
+    set name, length, prefix, file(forward), file(reverse) from simulatedReads
 
     output:
     set name, file("*_R1_001.fastq.gz"), file("*_R2_001.fastq.gz") 
 
     script:
     """
-    sed "s/^@HWI-ST745_0097:7/${fq_header}/g" ${forward} | sed 's/#0\\/1/ 1:N:0:10/g' | sed '/^+HWI/s/.*/+/' | gzip > TESTPIPE-${name}_S${length}_L001_R1_001.fastq.gz
-    sed "s/^@HWI-ST745_0097:7/${fq_header}/g" ${reverse} | sed 's/#0\\/2/ 2:N:0:10/g' | sed '/^+HWI/s/.*/+/' | gzip > TESTPIPE-${name}_S${length}_L001_R2_001.fastq.gz
+    sed "s/^@HWI-ST745_0097:7/${fq_header}/g" ${forward} | sed 's/#0\\/1/ 1:N:0:10/g' | sed '/^+HWI/s/.*/+/' | gzip > ${prefix}-${name}_S${length}_L001_R1_001.fastq.gz
+    sed "s/^@HWI-ST745_0097:7/${fq_header}/g" ${reverse} | sed 's/#0\\/2/ 2:N:0:10/g' | sed '/^+HWI/s/.*/+/' | gzip > ${prefix}-${name}_S${length}_L001_R2_001.fastq.gz
     """
 }
-
-
-//simulateReads.combine(readLengths).combine(referenceFastq.map{ [ it[1][0], it[1][1] ] }).println()
