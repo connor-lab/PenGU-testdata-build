@@ -1,9 +1,9 @@
 Name,targetCov,ReadPrefix,RefSeqFTPURL,extract_amplicon,amplicon_region
-GCF_001343785-1,10000,FLU,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/343/785/GCF_001343785.1_ViralMultiSegProj274766/GCF_001343785.1_ViralMultiSegProj274766_genomic.fna.gz,false,NA
+GCF_000865085-1,10000,FLU,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/865/085/GCF_000865085.1_ViralMultiSegProj15622/GCF_000865085.1_ViralMultiSegProj15622_genomic.fna.gz,false,NA
 GCF_000009205-2,80,DIGCD,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/009/205/GCF_000009205.2_ASM920v2/GCF_000009205.2_ASM920v2_genomic.fna.gz,false,NA
 GCF_000011065-1,80,ARGID,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/011/065/GCF_000011065.1_ASM1106v1/GCF_000011065.1_ASM1106v1_genomic.fna.gz,false,NA
 GCF_000496605-2,80,ARGID,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/496/605/GCF_000496605.2_ASM49660v2/GCF_000496605.2_ASM49660v2_genomic.fna.gz,false,NA
 GCF_000195955-2,80,WCMID,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/195/955/GCF_000195955.2_ASM19595v2/GCF_000195955.2_ASM19595v2_genomic.fna.gz,false,NA
-GCF_000864765-1,10000,HIV,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/864/765/GCF_000864765.1_ViralProj15476/GCF_000864765.1_ViralProj15476_genomic.fna.gz,true,NC_001802.1:1820-4641
+GCF_000864765-1,10000,HIV,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/864/765/GCF_000864765.1_ViralProj15476/GCF_000864765.1_ViralProj15476_genomic.fna.gz,true,NC_001802.1:1600-5100
 GCF_000240185-1,80,ARGID,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/240/185/GCF_000240185.1_ASM24018v2/GCF_000240185.1_ASM24018v2_genomic.fna.gz,false,NA
 GCF_002816725-1,1000,ENT,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/816/725/GCF_002816725.1_ASM281672v1/GCF_002816725.1_ASM281672v1_genomic.fna.gz,false,NA
